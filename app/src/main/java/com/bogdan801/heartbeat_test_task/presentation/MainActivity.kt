@@ -3,44 +3,39 @@ package com.bogdan801.heartbeat_test_task.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.bogdan801.heartbeat_test_task.presentation.navigation.Navigation
+import com.bogdan801.heartbeat_test_task.presentation.screens.home.HomeScreen
 import com.bogdan801.heartbeat_test_task.presentation.theme.HeartbeatTestTaskTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             HeartbeatTestTaskTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                val navController = rememberNavController()
+                Navigation(
+                    navController = navController,
+                    homeScreen = {
+                        HomeScreen(
+                            navController = navController
+                        )
+                    },
+                    historyScreen = {
+
+                    },
+                    addEditScreen = {
+
+                    }
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    HeartbeatTestTaskTheme {
-        Greeting("Android")
     }
 }
