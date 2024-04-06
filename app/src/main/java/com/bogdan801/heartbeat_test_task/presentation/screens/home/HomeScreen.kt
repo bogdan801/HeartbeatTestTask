@@ -7,10 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Restore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -33,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bogdan801.heartbeat_test_task.domain.model.Item
+import com.bogdan801.heartbeat_test_task.presentation.components.ActionButton
 import com.bogdan801.heartbeat_test_task.presentation.components.ItemCard
 import com.bogdan801.heartbeat_test_task.presentation.navigation.Screen
 
@@ -89,6 +94,45 @@ fun HomeScreen(
                 item {
                     ItemCard(
                         item = Item()
+                    )
+                }
+                item {
+                    ActionButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .widthIn(350.dp),
+                        label = "All History",
+                        backgroundColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        icon = {
+                            Icon(imageVector = Icons.Outlined.Restore, contentDescription = "")
+                        }
+                    )
+                }
+                item {
+                    ActionButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .widthIn(350.dp),
+                        label = "Save",
+                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+                item {
+                    ActionButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .widthIn(350.dp),
+                        label = "Clear History",
+                        backgroundColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        icon = {
+                            Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+                        }
                     )
                 }
             }
