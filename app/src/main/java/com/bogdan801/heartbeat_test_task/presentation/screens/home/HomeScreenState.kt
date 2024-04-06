@@ -1,5 +1,7 @@
 package com.bogdan801.heartbeat_test_task.presentation.screens.home
 
+import com.bogdan801.heartbeat_test_task.domain.model.Item
+
 data class HomeScreenState(
-    val state: String = "hello"
+    val displayItems: List<Item> = listOf()
 )

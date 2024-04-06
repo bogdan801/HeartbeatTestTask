@@ -1,7 +1,6 @@
-package com.bogdan801.heartbeat_test_task.presentation.screens.home
+package com.bogdan801.heartbeat_test_task.presentation.screens.history
 
 import androidx.lifecycle.ViewModel
-import com.bogdan801.heartbeat_test_task.domain.model.Item
 import com.bogdan801.heartbeat_test_task.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,19 +9,20 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel
+class HistoryViewModel
 @Inject
 constructor(
     private val repository: Repository
 ): ViewModel() {
-    private val _screenState = MutableStateFlow(HomeScreenState())
+    private val _screenState = MutableStateFlow(HistoryScreenState())
     val screenState = _screenState.asStateFlow()
 
-    fun updateList(value: List<Item>){
+    fun setValue(value: String){
         _screenState.update {
             it.copy(
-                displayItems = value
+                state = value
             )
         }
     }
+
 }

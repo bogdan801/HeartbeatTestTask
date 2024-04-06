@@ -30,9 +30,10 @@ object AppModule {
 
     @Provides
     fun provideDao(db : Database) = db.dbDao
+
     @Provides
     @Singleton
-    fun provideRepository(): Repository {
-        return RepositoryImpl()
+    fun provideRepository(db : Database): Repository {
+        return RepositoryImpl(db.dbDao)
     }
 }

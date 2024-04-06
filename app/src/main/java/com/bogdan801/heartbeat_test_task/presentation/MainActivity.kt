@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.bogdan801.heartbeat_test_task.presentation.navigation.Navigation
+import com.bogdan801.heartbeat_test_task.presentation.screens.add_edit.AddEditScreen
+import com.bogdan801.heartbeat_test_task.presentation.screens.history.HistoryScreen
 import com.bogdan801.heartbeat_test_task.presentation.screens.home.HomeScreen
 import com.bogdan801.heartbeat_test_task.presentation.theme.HeartbeatTestTaskTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,10 +31,15 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     historyScreen = {
-
+                        HistoryScreen(
+                            navController = navController
+                        )
                     },
                     addEditScreen = {
-
+                        AddEditScreen(
+                            navController = navController,
+                            editId = it
+                        )
                     }
                 )
             }
