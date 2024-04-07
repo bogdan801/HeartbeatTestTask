@@ -34,4 +34,7 @@ interface Dao {
 
     @Query("SELECT * FROM ( SELECT * FROM itementity ORDER BY itemID DESC LIMIT 3 )")
     fun getTop3ItemEntities() : Flow<List<ItemEntity>>
+
+    @Query("SELECT * FROM itementity WHERE itemID == :itemId")
+    suspend fun getItemEntityById(itemId: Int): ItemEntity?
 }

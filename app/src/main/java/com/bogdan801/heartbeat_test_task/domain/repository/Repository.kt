@@ -19,4 +19,5 @@ interface Repository {
     //select
     fun getItems() : Flow<List<Item>>
     fun getTop3Items() : Flow<List<Item>>
+    suspend fun getItemById(editId: Int): Item?
 }

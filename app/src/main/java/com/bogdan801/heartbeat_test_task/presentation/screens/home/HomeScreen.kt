@@ -1,14 +1,22 @@
 package com.bogdan801.heartbeat_test_task.presentation.screens.home
 
+import android.widget.Toast
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,11 +34,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,9 +53,10 @@ import androidx.navigation.compose.rememberNavController
 import com.bogdan801.heartbeat_test_task.domain.model.Item
 import com.bogdan801.heartbeat_test_task.presentation.components.ActionButton
 import com.bogdan801.heartbeat_test_task.presentation.components.ItemCard
+import com.bogdan801.heartbeat_test_task.presentation.components.NumberSelector
 import com.bogdan801.heartbeat_test_task.presentation.navigation.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController = rememberNavController(),
@@ -49,6 +64,7 @@ fun HomeScreen(
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -83,58 +99,56 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(systemPadding),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.TopCenter
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(top = 8.dp, start = 16.dp, end = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                item {
-                    ItemCard(
-                        item = Item()
-                    )
+            if(screenState.displayItems.isNotEmpty()){
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(top = 8.dp, start = 16.dp, end = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(screenState.displayItems) { item ->
+                        ItemCard(
+                            modifier = Modifier.animateItemPlacement(),
+                            item = item,
+                            onEditItemClick = {
+                                navController.navigate(Screen.AddEdit.withArgs("$it"))
+                            },
+                            onDeleteItemClick = {
+                                viewModel.deleteItem(it)
+                                Toast.makeText(context, "Item has been deleted", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        )
+                    }
+                    item {
+                        ActionButton(
+                            modifier = Modifier
+                                .width(500.dp)
+                                .height(56.dp)
+                                .animateItemPlacement(),
+                            label = "All History",
+                            backgroundColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            icon = {
+                                Icon(imageVector = Icons.Outlined.Restore, contentDescription = "")
+                            },
+                            onClick = {
+                                navController.navigate(Screen.History.route)
+                            }
+                        )
+                    }
                 }
-                item {
-                    ActionButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .widthIn(350.dp),
-                        label = "All History",
-                        backgroundColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.onBackground,
-                        icon = {
-                            Icon(imageVector = Icons.Outlined.Restore, contentDescription = "")
-                        }
-                    )
-                }
-                item {
-                    ActionButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .widthIn(350.dp),
-                        label = "Save",
-                        backgroundColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-                item {
-                    ActionButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp)
-                            .widthIn(350.dp),
-                        label = "Clear History",
-                        backgroundColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        icon = {
-                            Icon(imageVector = Icons.Default.Delete, contentDescription = "")
-                        }
-                    )
-                }
+            }
+            else {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "Records list is empty.\nPress \"+\" to add new records",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }

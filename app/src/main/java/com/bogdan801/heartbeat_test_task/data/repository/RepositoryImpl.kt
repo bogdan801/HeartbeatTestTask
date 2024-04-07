@@ -35,4 +35,6 @@ class RepositoryImpl(
             emit(itemEntities.map { it.toItem() })
         }
     }
+
+    override suspend fun getItemById(editId: Int): Item? = dao.getItemEntityById(editId)?.toItem()
 }

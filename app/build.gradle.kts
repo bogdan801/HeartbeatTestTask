@@ -95,6 +95,9 @@ dependencies {
     kapt(libs.hilt.compiler)
     kapt(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    //date time picker
+    implementation(libs.datetime)
 }
 
 // Allow references to generated code
