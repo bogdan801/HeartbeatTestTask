@@ -28,9 +28,24 @@ constructor(
         }
     }
 
-    fun deleteItem(itemId: Int) {
+    fun deleteItem(item: Item) {
+        _screenState.update {
+            it.copy(
+                deletedItem = item
+            )
+        }
         viewModelScope.launch {
-            repository.deleteItem(itemId)
+            repository.deleteItem(item.itemID)
+        }
+    }
+
+    fun restoreItem(){
+        if(_screenState.value.deletedItem != null){
+            val oldId = _screenState.value.deletedItem!!.itemID
+            viewModelScope.launch {
+                val id = repository.insertItem(_screenState.value.deletedItem!!).toInt()
+                repository.updateID(id, oldId)
+            }
         }
     }
 

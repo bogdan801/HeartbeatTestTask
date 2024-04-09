@@ -44,7 +44,7 @@ fun ItemCard(
     height: Dp = 96.dp,
     elevation: Dp = 2.dp,
     item: Item,
-    onDeleteItemClick: (id: Int) -> Unit = {},
+    onDeleteItemClick: (item: Item) -> Unit = {},
     onEditItemClick: (id: Int) -> Unit = {}
 ) {
     var showDropDown by remember { mutableStateOf(false) }
@@ -75,6 +75,8 @@ fun ItemCard(
                             interactionSource.emit(press)
                             tryAwaitRelease()
                             interactionSource.emit(PressInteraction.Release(press))
+
+                            //if(!showDropDown) onEditItemClick(item.itemID)
                         }
                     )
                 }
@@ -141,7 +143,7 @@ fun ItemCard(
                     textColor = MaterialTheme.colorScheme.onBackground
                 ),
                 onClick = {
-                    onDeleteItemClick(item.itemID)
+                    onDeleteItemClick(item)
                     showDropDown = false
                 }
             )

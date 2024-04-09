@@ -18,6 +18,9 @@ interface Dao {
     @Update
     suspend fun updateItemEntity(itemEntity: ItemEntity)
 
+    @Query("UPDATE itementity SET itemID = :newId WHERE itemID==:prevId")
+    suspend fun updateItemId(prevId: Int, newId: Int)
+
     //delete
     @Query("DELETE FROM itementity WHERE itemID == :itemId")
     suspend fun deleteItemEntity(itemId: Int)

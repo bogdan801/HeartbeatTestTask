@@ -1,7 +1,6 @@
 package com.bogdan801.heartbeat_test_task.presentation.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -46,12 +45,21 @@ fun Navigation(
                 route = Screen.History.route,
                 enterTransition = {
                     slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(200)
+                        towards = AnimatedContentTransitionScope.SlideDirection.Left
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Right
                     )
                 },
                 popExitTransition = {
                     slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.Right
+                    )
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
                         towards = AnimatedContentTransitionScope.SlideDirection.Right
                     )
                 }

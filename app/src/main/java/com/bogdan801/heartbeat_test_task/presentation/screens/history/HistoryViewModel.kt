@@ -2,6 +2,7 @@ package com.bogdan801.heartbeat_test_task.presentation.screens.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bogdan801.heartbeat_test_task.domain.model.Item
 import com.bogdan801.heartbeat_test_task.domain.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,11 +20,32 @@ constructor(
     private val _screenState = MutableStateFlow(HistoryScreenState())
     val screenState = _screenState.asStateFlow()
 
-    fun setValue(value: String){
+    private fun updateList(value: List<Item>){
         _screenState.update {
             it.copy(
-                state = value
+                displayItems = value
             )
+        }
+    }
+
+    fun deleteItem(item: Item) {
+        _screenState.update {
+            it.copy(
+                deletedItem = item
+            )
+        }
+        viewModelScope.launch {
+            repository.deleteItem(item.itemID)
+        }
+    }
+
+    fun restoreItem(){
+        if(_screenState.value.deletedItem != null){
+            val oldId = _screenState.value.deletedItem!!.itemID
+            viewModelScope.launch {
+                val id = repository.insertItem(_screenState.value.deletedItem!!).toInt()
+                repository.updateID(id, oldId)
+            }
         }
     }
 
@@ -33,4 +55,11 @@ constructor(
         }
     }
 
+    init {
+        viewModelScope.launch {
+            repository.getItems().collect{
+                updateList(it)
+            }
+        }
+    }
 }

@@ -16,6 +16,10 @@ class RepositoryImpl(
         dao.updateItemEntity(item.toItemEntity())
     }
 
+    override suspend fun updateID(prevId: Int, newId: Int) {
+        dao.updateItemId(prevId, newId)
+    }
+
     override suspend fun deleteItem(itemId: Int) {
         dao.deleteItemEntity(itemId)
     }

@@ -9,6 +9,7 @@ interface Repository {
 
     //update
     suspend fun updateItem(item: Item)
+    suspend fun updateID(prevId: Int, newId: Int)
 
     //delete
     suspend fun deleteItem(itemId: Int)

@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.bogdan801.heartbeat_test_task.presentation.components.ActionButton
 import com.bogdan801.heartbeat_test_task.presentation.components.AdaptiveLayout
 import com.bogdan801.heartbeat_test_task.presentation.components.NumberSelector
+import com.bogdan801.heartbeat_test_task.presentation.util.DeviceOrientation
 import com.bogdan801.heartbeat_test_task.presentation.util.getDeviceConfiguration
 import com.bogdan801.heartbeat_test_task.presentation.util.toFormattedString
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -48,8 +49,7 @@ import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.Month
+import kotlinx.datetime.toJavaLocalDate
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -115,7 +115,7 @@ fun AddEditScreen(
                         Row(
                             modifier = Modifier
                                 .width(320.dp)
-                                .fillMaxHeight()
+                                .weight(1f)
                                 .align(Alignment.CenterHorizontally),
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
@@ -157,6 +157,13 @@ fun AddEditScreen(
                                 onValueChanged = {
                                     viewModel.setPulse(it)
                                 }
+                            )
+                        }
+                        if(configuration.orientation == DeviceOrientation.Landscape) {
+                            Spacer(
+                                modifier = Modifier.height(
+                                    8.dp
+                                )
                             )
                         }
                     }
@@ -237,6 +244,7 @@ fun AddEditScreen(
                                     )
                                 }
                             ) {
+                                val dateNow = LocalDate.now()
                                 datepicker(
                                     initialDate = LocalDate.of(
                                         screenState.date.year,
@@ -249,6 +257,9 @@ fun AddEditScreen(
                                         dateInactiveTextColor = MaterialTheme.colorScheme.onBackground,
                                         dateActiveBackgroundColor = MaterialTheme.colorScheme.secondary
                                     ),
+                                    allowedDateValidator = {
+                                        it <= dateNow
+                                    },
                                     title = "Pick a date"
                                 ) {
                                     val day = it.dayOfMonth
@@ -277,6 +288,9 @@ fun AddEditScreen(
                                     )
                                 }
                             ) {
+                                val dateNow = LocalDate.now()
+                                val isTodaySelected = screenState.date.toJavaLocalDate() == dateNow
+                                val timeNow = LocalTime.now()
                                 timepicker(
                                     initialTime = LocalTime.of(screenState.time.hour, screenState.time.minute),
                                     title = "Pick a time",
@@ -286,10 +300,12 @@ fun AddEditScreen(
                                         inactiveTextColor = MaterialTheme.colorScheme.onBackground,
                                         headerTextColor = MaterialTheme.colorScheme.onBackground,
                                         selectorColor = MaterialTheme.colorScheme.secondary,
-                                        inactiveBackgroundColor = MaterialTheme.colorScheme.onPrimary,
+                                        inactiveBackgroundColor = MaterialTheme.colorScheme.surface,
                                         borderColor = Color.Blue,
                                         inactivePeriodBackground = Color.Red
-                                    )
+                                    ),
+                                    timeRange = if(isTodaySelected) LocalTime.of(0, 0)..timeNow
+                                    else LocalTime.of(0, 0)..LocalTime.of(23,59,59)
                                 ) {
                                     val hour = it.hour
                                     val minute = it.minute
